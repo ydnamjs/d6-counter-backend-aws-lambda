@@ -1,1 +1,6 @@
-numpy
+fastapi
+uvicorn
+mangum
+python-multipart
+opencv-python-headless
+bbox_visualizer
