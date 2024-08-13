@@ -236,10 +236,28 @@ Copy the "Access key" and paste it into the "AWS Access Key ID" field for the aw
 
 ![image](https://github.com/user-attachments/assets/75fac164-3335-4907-a0f9-6f30895c8cbf)
 
-Copy the "Secret access key" and paste it into the "AWS Secret Access Key ID"
+Copy the "Secret access key" and paste it into the "AWS Secret Access Key ID" field for the aws configure
 
 ![image](https://github.com/user-attachments/assets/1c2989fe-9199-4e01-99b0-555c419fee18)
 
-Optionally enter a "Default region name" like "us-east-2"
+Optionally enter a region like "us-east-2" into the "Default region name" field for the aws configure
 
-Enter "json" as the "Default output format"
+Enter "json" as the "Default output format" field for the aws configure
+
+## Building the Docker image
+
+Clone the repository
+```
+git clone https://github.com/ydnamjs/d6-counter-backend-aws-lambda.git
+```
+
+Navigate into the repository
+```
+cd d6-counter-backend-aws-lambda
+```
+
+Build the Docker image
+```
+sudo docker build --platform linux/amd64 -t d6-counter-backend-demo:latest .
+```
+
