@@ -15,13 +15,16 @@ from typing import Annotated
 from io import BytesIO
 from PIL import Image
 from mangum import Mangum
+import os
+os.environ['TORCH_HOME'] = '/tmp/'
+
 
 seed = 0
 torch.manual_seed(seed)
 
 NUM_CLASSES = 6
-DETECTION_STATE_PATH = "./detector.pth"
-CLASSIFIER_STATE_PATH = "./classifier.pth"
+DETECTION_STATE_PATH = "./detector.pt"
+CLASSIFIER_STATE_PATH = "./classifier.pt"
 BBOX_COLOR = (255, 255, 255)
 LABEL_BG_COLOR = (0, 0, 0)
 LABEL_TEXT_COLOR = (255, 255, 255)
@@ -29,13 +32,13 @@ PAD_COLOR = (0, 0, 0)
 PAD_AMT = 25
 
 detection_model = models.detection.fasterrcnn_mobilenet_v3_large_320_fpn(weights=None, num_classes=2)
-detection_model.load_state_dict(torch.load(DETECTION_STATE_PATH))
+detection_model.load_state_dict(torch.load(DETECTION_STATE_PATH, weights_only=True))
 detection_model.eval()
 
 classification_model = models.mobilenet_v3_small(weights=None)
 num_features = classification_model.classifier[3].in_features
 classification_model.classifier[3] = torch.nn.Linear(num_features, NUM_CLASSES)
-classification_model.load_state_dict(torch.load(CLASSIFIER_STATE_PATH))
+classification_model.load_state_dict(torch.load(CLASSIFIER_STATE_PATH, weights_only=True))
 classification_model.eval()
 
 transform = v2.Compose([
@@ -49,7 +52,7 @@ tensorify = transforms.Compose([
 
 def preprocess_image(image, threshold1, threshold2):
     imageArray = numpy.array(image)
-    
+
     processed_image_array = cv2.resize(imageArray, (512, 512), interpolation=cv2.INTER_LANCZOS4)
     processed_image_array = cv2.GaussianBlur(processed_image_array, (5, 5), 0)
     processed_image_array = cv2.Canny(processed_image_array, threshold1=threshold1, threshold2=threshold2)
@@ -69,7 +72,7 @@ def predict_image(preprocessed_image):
 
     predictions = []
     for box in boxes:
-            
+
         x1, y1, x2, y2 = box
 
         subImageArray = preprocessed_image[int(y1):int(y2), int(x1):int(x2)]
@@ -85,7 +88,7 @@ def predict_image(preprocessed_image):
     return boxes, scores, predictions
 
 def process_predictions(image, boxes, scores, predictions, scoreThreshold):
-    
+
     imageArray = numpy.array(image)
     imageArray = cv2.resize(imageArray, (512, 512), interpolation=cv2.INTER_LANCZOS4)
     result = imageArray
@@ -127,7 +130,7 @@ app.add_middleware(
 def hello_world():
     return {"hello": "world"}
 
-@app.post("/post-image/")
+@app.post("/post-image")
 async def process_frame(image: Annotated[UploadFile, Form()], canny_threshold_1: Annotated[int, Form()], canny_threshold_2: Annotated[int, Form()]):
 
 
@@ -144,8 +147,8 @@ async def process_frame(image: Annotated[UploadFile, Form()], canny_threshold_1:
     img_byte_arr = img_byte_arr.getvalue()
 
     return OutputModel(
-        preprocessed_image=image_to_base64(Image.fromarray(preprocessed_image_array)), 
-        output_image=image_to_base64(outputImage), 
+        preprocessed_image=image_to_base64(Image.fromarray(preprocessed_image_array)),
+        output_image=image_to_base64(outputImage),
         total=predicted_total
     )
 
