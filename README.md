@@ -285,3 +285,54 @@ Push the image up to the ECR Repository replacing "111111111111" with your "Acco
 ```
 sudo docker push 111111111111.dkr.ecr.us-east-2.amazonaws.com/d6-counter-backend-lambda-demo:latest
 ```
+
+## Deploying Image on AWS Lambda
+
+Navigate to the "Console Home" page by clicking the aws button which is always in the top left of the screen
+
+![image](https://github.com/user-attachments/assets/a7afc45a-53ca-4f4b-a296-42289bc4f93c)
+
+Navigate to the All Services menu by selecting "View All Services"
+
+![image](https://github.com/user-attachments/assets/912ac926-76a7-413a-b000-c9f5b6658484)
+
+In the all services menu, under "Compute" select "Lambda"
+
+![image](https://github.com/user-attachments/assets/75dea858-b8d9-44a7-af66-4326b93e891c)
+
+In the "Lambda" page, select "Create a function"
+
+![image](https://github.com/user-attachments/assets/1605a806-7975-4f57-8b4b-f88cb0f525a3)
+
+In the "Create function" menu, select "Container image", then enter a name and select "Browse images"
+
+![image](https://github.com/user-attachments/assets/fd595b1d-4416-4e05-8226-e1c02827c40b)
+
+Open the "Select repository" dropdown and select the repository that the image was pushed to
+
+![image](https://github.com/user-attachments/assets/48c06dc3-d375-4b68-9195-4e4016981146)
+
+Select the image by clicking the circle next to it and then click the "Select image" button
+
+![image](https://github.com/user-attachments/assets/96ad5a71-5c13-4d3f-8383-c0c34ebb25a6)
+
+At the buttom of the "Create function" menu, select "Create function"
+
+![image](https://github.com/user-attachments/assets/9b1e3cb1-c812-400c-9546-c62753872370)
+
+In the function overview menu, select "Configuration"
+
+![image](https://github.com/user-attachments/assets/2ac3adb3-18a8-469d-971a-a81e3d0d9adb)
+
+In the "Configuration" menu, select "General Configuration" then "Edit"
+
+![image](https://github.com/user-attachments/assets/f27f9884-3f9e-4985-8120-a1a6af72ed0f)
+
+In the "General Configuration" menu set the "Memory" to 2000 MB, "Ephemeral storage" to 1000 MB, and "Timeout" to 1 min 0 sec
+
+![image](https://github.com/user-attachments/assets/5458889a-dcd0-4902-a826-cfc81b19099c)
+
+In the "Execution role" section of the "General Configuration" menu select "Create a new role from AWS policy templates" then enter a role name and click "Save"
+
+![image](https://github.com/user-attachments/assets/70bc0b45-255b-42b0-ae16-43cc90040e4d)
+
