@@ -158,19 +158,18 @@ Paste the below policy in the text editor
     "Version": "2012-10-17",
     "Statement": [
         {
+            "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
+                "ecr:CreateRepository",
                 "ecr:CompleteLayerUpload",
+                "ecr:TagResource",
+                "ecr:GetAuthorizationToken",
                 "ecr:UploadLayerPart",
                 "ecr:InitiateLayerUpload",
                 "ecr:BatchCheckLayerAvailability",
                 "ecr:PutImage"
             ],
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "ecr:GetAuthorizationToken",
             "Resource": "*"
         }
     ]
@@ -229,7 +228,7 @@ Optionally, enter a description and then select "Create access key"
 
 Inside the EC2 Instance run the following command:
 ```
-aws configure
+sudo aws configure
 ```
 
 Copy the "Access key" and paste it into the "AWS Access Key ID" field for the aws configure
@@ -244,9 +243,25 @@ Optionally enter a region like "us-east-2" into the "Default region name" field 
 
 Enter "json" as the "Default output format" field for the aws configure
 
-## Building the Docker image
+## Building and Pushing the Docker Image
 
-Clone the repository
+See: https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions for official instructions
+
+Return to the AWS IAM Console and copy your "Account ID" from the AWS Account section
+
+![image](https://github.com/user-attachments/assets/0f96d988-fd7d-4199-ba3b-d615f08b714f)
+
+Return to your EC2 instance and run the following command replacing both "us-east-2"s with your region of choice and the "111111111111" with your "Account ID"
+```
+sudo aws ecr get-login-password --region us-east-2 | sudo docker login --username AWS --password-stdin 111111111111.dkr.ecr.us-east-2.amazonaws.com
+```
+
+Create an ECR Repository by running the following command replacing the "us-east-2" with your region of choice
+```
+sudo aws ecr create-repository --repository-name d6-counter-backend-lambda-demo --region us-east-2 --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
+```
+
+Clone this repository
 ```
 git clone https://github.com/ydnamjs/d6-counter-backend-aws-lambda.git
 ```
@@ -258,6 +273,15 @@ cd d6-counter-backend-aws-lambda
 
 Build the Docker image
 ```
-sudo docker build --platform linux/amd64 -t d6-counter-backend-demo:latest .
+sudo docker build --platform linux/amd64 -t d6-counter-backend-lambda-demo:latest .
 ```
 
+Tag the docker image replacing "111111111111" with your "Account ID" and "us-east-2" with your region of choice
+```
+sudo docker tag d6-counter-backend-lambda-demo:latest 111111111111.dkr.ecr.us-east-2.amazonaws.com/d6-counter-backend-lambda-demo:latest
+```
+
+Push the image up to the ECR Repository replacing "111111111111" with your "Account ID" and "us-east-2" with your region of choice
+```
+sudo docker push 111111111111.dkr.ecr.us-east-2.amazonaws.com/d6-counter-backend-lambda-demo:latest
+```
