@@ -14,7 +14,7 @@ Navigate to the All Services menu by selecting "View All Services"
 
 ![image](https://github.com/user-attachments/assets/912ac926-76a7-413a-b000-c9f5b6658484)
 
-In the all services menu, under Computer select EC2
+In the all services menu, under "Compute" select "EC2"
 
 ![image](https://github.com/user-attachments/assets/bd6405b1-6156-4d64-9c2e-3d8237a7ade7)
 
@@ -116,3 +116,130 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 ```
 
 See https://docs.docker.com/engine/install/ubuntu/ for official instructions
+
+## Setting up AWS Credentials
+
+Navigate to the "Console Home" page by clicking the aws button which is always in the top left of the screen
+
+![image](https://github.com/user-attachments/assets/a7afc45a-53ca-4f4b-a296-42289bc4f93c)
+
+Navigate to the All Services menu by selecting "View All Services"
+
+![image](https://github.com/user-attachments/assets/912ac926-76a7-413a-b000-c9f5b6658484)
+
+In the all services menu, under "Security, Identity, & Compliance" select "IAM"
+
+![image](https://github.com/user-attachments/assets/f66116b3-11ea-4aa2-a35b-408aeccf4acf)
+
+In the IAM Menu, navigate to the "Users" menu
+
+![image](https://github.com/user-attachments/assets/f269402d-5bfa-4266-8147-b985e1d53146)
+
+In the Users Menu, select "Create user"
+
+![image](https://github.com/user-attachments/assets/2078e189-0a29-460a-ab0a-45f4bf1cb01f)
+
+Give the user a name and select "next"
+
+![image](https://github.com/user-attachments/assets/ef8586e7-35fb-4942-a408-45ced5672495)
+
+In the "Set permissions" menu, select "Attach policies directly" then select "Create policy"
+
+![image](https://github.com/user-attachments/assets/ce1099ff-3aef-4260-abfe-a9fdeab1342c)
+
+In the "Create policy" menu's "Policy editor" section, select "JSON"
+
+![image](https://github.com/user-attachments/assets/533ee835-c591-45aa-9493-9c6740db90ed)
+
+Paste the below policy in the text editor
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:CompleteLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:InitiateLayerUpload",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:PutImage"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ecr:GetAuthorizationToken",
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+See https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-push-iam.html for additional information
+
+Select "Next" at the bottom of the "Policy editor" section
+
+![image](https://github.com/user-attachments/assets/26839535-8d31-40d6-aec5-b37baa94d398)
+
+Give the policy a name and optionally a description
+
+![image](https://github.com/user-attachments/assets/e8b191ba-ecac-4f77-8b4b-ba9760c6404f)
+
+At the bottom of the "Review and Create" menu, select "Create policy"
+
+![image](https://github.com/user-attachments/assets/d1f23f46-024c-4394-921c-28aed4a2a2a0)
+
+Return to the "Create User" tab and refresh the policy list
+
+![image](https://github.com/user-attachments/assets/49b76322-deaf-46ea-81bb-6fa423c6e964)
+
+Enable the policy just created in the "Create policy" tab by checking the box next to its name
+
+![image](https://github.com/user-attachments/assets/513625a8-6048-4c23-83df-d78bd927372b)
+
+At the bottom of the "Create User" menu, select "Next"
+
+![image](https://github.com/user-attachments/assets/49c48a2e-49fa-456e-9b6e-f4a3dbd9e2e2)
+
+At the bottom of the "Review and create" menu, select "Create user"
+
+![image](https://github.com/user-attachments/assets/af72325e-1e0a-40af-b740-82b1253bc5f5)
+
+Select the user in the "users" menu
+
+![image](https://github.com/user-attachments/assets/2eb2eb69-2a67-4748-ad22-2d0e158b2b44)
+
+In the "Summary" section, select "Create access key"
+
+![image](https://github.com/user-attachments/assets/6a1b74c5-d258-40fb-b7bd-fd2832cddf12)
+
+Select "Command Line Interface (CLI)" from the "Use Case" Section
+
+![image](https://github.com/user-attachments/assets/b9af1ef8-e747-4069-ae11-c6ef02177a32)
+
+Check the "Confirmation" box and select "Next"
+
+![image](https://github.com/user-attachments/assets/27fff7e2-aa4e-420c-8237-e81d2cfb43bf)
+
+Optionally, enter a description and then select "Create access key"
+
+![image](https://github.com/user-attachments/assets/a2c4d5c4-3329-4e45-a089-6541260756f7)
+
+Inside the EC2 Instance run the following command:
+```
+aws configure
+```
+
+Copy the "Access key" and paste it into the "AWS Access Key ID" field for the aws configure
+
+![image](https://github.com/user-attachments/assets/75fac164-3335-4907-a0f9-6f30895c8cbf)
+
+Copy the "Secret access key" and paste it into the "AWS Secret Access Key ID"
+
+![image](https://github.com/user-attachments/assets/1c2989fe-9199-4e01-99b0-555c419fee18)
+
+Optionally enter a "Default region name" like "us-east-2"
+
+Enter "json" as the "Default output format"
