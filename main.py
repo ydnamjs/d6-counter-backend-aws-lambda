@@ -132,7 +132,7 @@ async def process_frame(
     image: Annotated[UploadFile, Form()], 
     canny_threshold_1: Annotated[int, Form()], 
     canny_threshold_2: Annotated[int, Form()], 
-    confidence_threshold: Annotated[int, Form()]
+    confidence_threshold: Annotated[float, Form()]
 ):
 
 
