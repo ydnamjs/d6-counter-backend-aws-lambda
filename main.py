@@ -137,7 +137,7 @@ async def process_frame(
 ):
 
     imageDecoded = base64.b64decode(image64)
-    image = Image.open(BytesIO(await imageDecoded.read()))
+    image = Image.open(BytesIO(imageDecoded))
     preprocessed_image_array = preprocess_image(image, canny_threshold_1, canny_threshold_2)
     boxes, scores, predictions = predict_image(preprocessed_image_array)
     outputImage, predicted_total = process_predictions(image, boxes, scores, predictions, confidence_threshold)
