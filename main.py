@@ -15,9 +15,6 @@ from typing import Annotated
 from io import BytesIO
 from PIL import Image
 from mangum import Mangum
-import os
-os.environ['TORCH_HOME'] = '/tmp/'
-
 
 seed = 0
 torch.manual_seed(seed)
