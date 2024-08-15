@@ -15,6 +15,7 @@ from typing import Annotated
 from io import BytesIO
 from PIL import Image
 from mangum import Mangum
+import base64
 
 seed = 0
 torch.manual_seed(seed)
@@ -129,17 +130,14 @@ def hello_world():
 
 @app.post("/post-image")
 async def process_frame(
-    image: Annotated[UploadFile, Form()], 
+    image64: Annotated[str, Form()], 
     canny_threshold_1: Annotated[int, Form()], 
     canny_threshold_2: Annotated[int, Form()], 
     confidence_threshold: Annotated[float, Form()]
 ):
 
-
-    if image.content_type not in ["image/jpeg"]:
-        raise HTTPException(status_code=400, detail="Invalid file type. Only PNG files are allowed.")
-
-    image = Image.open(BytesIO(await image.read()))
+    imageDecoded = base64.b64decode(image64)
+    image = Image.open(BytesIO(imageDecoded))
     preprocessed_image_array = preprocess_image(image, canny_threshold_1, canny_threshold_2)
     boxes, scores, predictions = predict_image(preprocessed_image_array)
     outputImage, predicted_total = process_predictions(image, boxes, scores, predictions, confidence_threshold)
