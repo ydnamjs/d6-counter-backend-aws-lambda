@@ -1,3 +1,23 @@
+# D6 Counter Backend Lambda
+
+This project is an API made with FastAPI that receives images of six sided dice and runs them through an AI model for detection and classification
+
+It is intended for use in AWS Lambda Functions
+
+# Live Front End Site
+
+Check out the React.js App that this API was made for at: https://ydnamjs.github.io/d6-counter-frontend/
+
+# Technologies Used
+- Amazon Web Services (AWS)
+- Python
+- Docker
+- FastAPI
+- PyTorch
+- Torchvision
+- openCV
+- Python Image Library (PIL)
+
 # Building and Deploying for AWS Lambda (Ubuntu)
 
 Due to the file size of the function, it is not possible to deploy using the zip upload or AWS S3 options so a docker image must be built and uploaded to AWS ECR (Elastic Container Registry).
