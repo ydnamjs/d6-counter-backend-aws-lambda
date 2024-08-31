@@ -95,6 +95,16 @@ LABEL_KEY = {
     71: "Unknown"
 }
 
+def reduce_contrast(image_array: numpy.ndarray, factor: float) -> numpy.ndarray:
+
+    mean_intensity = numpy.mean(image_array, axis=(0, 1))
+
+    reduced_contrast_image = mean_intensity + factor * (image_array - mean_intensity)
+
+    reduced_contrast_image = numpy.clip(reduced_contrast_image, 0, 255)
+
+    return reduced_contrast_image.astype(numpy.uint8)
+
 NUM_CLASSES = 71
 DETECTION_STATE_PATH = "./detector.pt"
 CLASSIFIER_STATE_PATH = "./classifier.pt"
@@ -150,6 +160,7 @@ def predict_image(preprocessed_image):
 
         subImageArray = preprocessed_image[int(y1):int(y2), int(x1):int(x2)]
         subImageArray = cv2.resize(subImageArray, (125, 125), interpolation=cv2.INTER_LANCZOS4)
+        subImageArray = reduce_contrast(subImageArray, .5)
         subImageTensor = tensorify(subImageArray)
         subImageTensor = transform(subImageTensor)
         subImageTensor = torch.unsqueeze(subImageTensor, 0)
