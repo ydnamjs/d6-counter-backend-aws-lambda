@@ -20,7 +20,82 @@ import base64
 seed = 0
 torch.manual_seed(seed)
 
-NUM_CLASSES = 6
+LABEL_KEY = {
+    0: "Unknown",
+    1: "D%-0",
+    2: "D%-10",
+    3: "D%-20",
+    4: "D%-30",
+    5: "D%-40",
+    6: "D%-50",
+    7: "D%-60",
+    8: "D%-70",
+    9: "D%-80",
+    10: "D%-90",
+    11: "D4-1",
+    12: "D4-2",
+    13: "D4-3",
+    14: "D4-4",
+    15: "D6-1",
+    16: "D6-2",
+    17: "D6-3",
+    18: "D6-4",
+    19: "D6-5",
+    20: "D6-6",
+    21: "D8-1",
+    22: "D8-2",
+    23: "D8-3",
+    24: "D8-4",
+    25: "D8-5",
+    26: "D8-6",
+    27: "D8-7",
+    28: "D8-8",
+    29: "D10-1",
+    30: "D10-2",
+    31: "D10-3",
+    32: "D10-4",
+    33: "D10-5",
+    34: "D10-6",
+    35: "D10-7",
+    36: "D10-8",
+    37: "D10-9",
+    38: "D10-10",
+    39: "D12-1",
+    40: "D12-2",
+    41: "D12-3",
+    42: "D12-4",
+    43: "D12-5",
+    44: "D12-6",
+    45: "D12-7",
+    46: "D12-8",
+    47: "D12-9",
+    48: "D12-10",
+    49: "D12-11",
+    50: "D12-12",
+    51: "D20-1",
+    52: "D20-2",
+    53: "D20-3",
+    54: "D20-4",
+    55: "D20-5",
+    56: "D20-6",
+    57: "D20-7",
+    58: "D20-8",
+    59: "D20-9",
+    60: "D20-10",
+    61: "D20-11",
+    62: "D20-12",
+    63: "D20-13",
+    64: "D20-14",
+    65: "D20-15",
+    66: "D20-16",
+    67: "D20-17",
+    68: "D20-18",
+    69: "D20-19",
+    70: "D20-20",
+    71: "Unknown"
+}
+
+NUM_CLASSES = 71
 DETECTION_STATE_PATH = "./detector.pt"
 CLASSIFIER_STATE_PATH = "./classifier.pt"
 BBOX_COLOR = (255, 255, 255)
@@ -96,7 +171,7 @@ def process_predictions(image, boxes, scores, predictions, scoreThreshold):
         if scores[i] < scoreThreshold:
             continue
 
-        label = str(predictions[i] + 1)
+        label = LABEL_KEY[predictions[i]]
         predicted_total = predicted_total + predictions[i] + 1
 
         result = bbv.draw_rectangle(result, boxes[i], BBOX_COLOR, thickness=1)
